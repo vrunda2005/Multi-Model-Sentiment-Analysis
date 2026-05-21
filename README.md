@@ -1,6 +1,5 @@
 
-# 🧠 Sentiment Analysis — AI Associate Portfolio Project
-
+# 🧠 Sentiment Analysis 
 A production-grade, **learning-based sentiment analysis pipeline** covering the full ML lifecycle:
 from classical baselines to transformer fine-tuning, deployed via REST API and an interactive dashboard.
 
