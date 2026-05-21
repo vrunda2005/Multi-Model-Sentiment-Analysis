@@ -1,0 +1,91 @@
+
+# ============================================================
+# Sentiment Analysis Project - Master Configuration
+# ============================================================
+
+project:
+  name: "Sentiment Analysis Pipeline"
+  version: "1.0.0"
+  seed: 42
+
+paths:
+  data_raw: "data/raw"
+  data_processed: "data/processed"
+  embeddings: "data/embeddings"
+  models: "experiments/models"
+  reports: "reports"
+  figures: "reports/figures"
+  metrics: "reports/metrics"
+
+data:
+  dataset: "imdb"               # imdb | twitter | amazon
+  max_samples: 50000            # null = use all
+  test_size: 0.15
+  val_size: 0.15
+  max_seq_length: 256           # for transformer
+  max_vocab_size: 30000         # for lstm
+  max_len_lstm: 200             # for lstm padding
+
+preprocessing:
+  remove_html: true
+  remove_urls: true
+  remove_mentions: true
+  remove_hashtags: false        # keep for twitter sentiment context
+  lowercase: true
+  remove_stopwords: false       # keep for transformers
+  lemmatize: true
+  min_word_freq: 2
+
+baseline:
+  model: "logistic_regression"   # logistic_regression | svm | naive_bayes | random_forest
+  tfidf:
+    max_features: 50000
+    ngram_range: [1, 2]
+    sublinear_tf: true
+    min_df: 2
+    max_df: 0.95
+  logistic_regression:
+    C: 1.0
+    max_iter: 1000
+    solver: "lbfgs"
+    class_weight: "balanced"
+  svm:
+    C: 1.0
+    kernel: "linear"
+
+lstm:
+  embedding_dim: 100
+  glove_file: "glove.6B.100d.txt"  # place in data/embeddings
+  use_pretrained_embeddings: true
+  hidden_dim: 128
+  num_layers: 2
+  dropout: 0.3
+  bidirectional: true
+  batch_size: 64
+  epochs: 15
+  learning_rate: 0.001
+  patience: 3                   # early stopping
+
+transformer:
+  model_name: "distilbert-base-uncased"
+  num_labels: 2
+  batch_size: 16
+  epochs: 4
+  learning_rate: 2.0e-5
+  warmup_ratio: 0.1
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  fp16: false                   # set true if GPU available
+
+mlflow:
+  tracking_uri: "experiments/mlruns"
+  experiment_name: "sentiment_analysis"
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  default_model: "transformer"  # baseline | lstm | transformer
+
+dashboard:
+  port: 8501
+  theme: "dark"
